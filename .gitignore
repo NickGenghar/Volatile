@@ -1,2 +1,5 @@
 node_modules/
 configurations/token.json
+configurations/dev.json
+package.json
+package-lock.json
