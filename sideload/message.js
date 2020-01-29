@@ -16,12 +16,23 @@ if(commandFolder.length <= 0) {
             console.error('\x1b[33m%s\x1b[0m',`Folder "${subFolder}" is empty. Ignoring...`);
         } else {
             commandFiles.forEach(files => {
-                let pull = require(`../commands/${subFolder}/${files}`);
-                executer.set(pull.name, pull);
-                console.log('\x1b[36m%s\x1b[0m',`Loaded command [${pull.name}] from "./commands/${subFolder}/${files}"`);
+                try {
+                    let pull = require(`../commands/${subFolder}/${files}`);
+                    executer.set(pull.name, pull);
+                    executer.source = new String();
+                    executer.source = subFolder;
+                    console.log('\x1b[36m%s\x1b[0m',`Loaded command [${pull.name}] from "./commands/${subFolder}/${files}"`);
+                } catch(e) {
+                    console.error('\x1b[31m%s\x1b[0m',e);
+                }
             })
         }
     })
+}
+
+if(executer.size <= 0) {
+    console.error('\x1b[31m%s\x1b[0m', 'All command subfolders are empty! Cannot proceed without any command modules installed. Exiting...');
+    return process.exit(-1);
 }
 
 module.exports = {

@@ -10,7 +10,7 @@ const {token} = require('./configurations/token.json');
 const sideload = new Discord.Collection();
 let sideloads = fs.readdirSync('./sideload/').filter(f => {if(f.indexOf('.js') > -1) return f;});
 if(sideloads.length <= 0) {
-    console.error('\x1b[31m%s\x1b[0m','Required directory is empty!');
+    console.error('\x1b[31m%s\x1b[0m','Required directory is empty! Cannot proceed without any command modules installed. Exiting...');
     return process.exit(-1);
 }
 sideloads.forEach(i => {
