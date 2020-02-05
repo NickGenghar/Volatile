@@ -3,7 +3,8 @@ const fs = require('fs');
 
 const {prefix} = require('../configurations/core.json');
 
-const executer = new Discord.Collection();
+let command = [];
+let index = 0;
 
 let commandFolder = fs.readdirSync('./commands').filter(folder => {if(folder.indexOf('.') < 0) return folder});
 if(commandFolder.length <= 0) {
@@ -18,9 +19,14 @@ if(commandFolder.length <= 0) {
             commandFiles.forEach(files => {
                 try {
                     let pull = require(`../commands/${subFolder}/${files}`);
-                    executer.set(pull.name, pull);
-                    executer.source = new String();
-                    executer.source = subFolder;
+                    command[index++] = {
+                        name: pull.name,
+                        alias: pull.alias,
+                        desc: pull.desc,
+                        run: pull.run,
+                        type: subFolder,
+                        location: `./commands/${subFolder}/${files}`
+                    }
                     console.log('\x1b[36m%s\x1b[0m',`Loaded command [${pull.name}] from "./commands/${subFolder}/${files}"`);
                 } catch(e) {
                     console.error('\x1b[31m%s\x1b[0m',e);
@@ -30,7 +36,7 @@ if(commandFolder.length <= 0) {
     })
 }
 
-if(executer.size <= 0) {
+if(!command || command.length <= 0) {
     console.error('\x1b[31m%s\x1b[0m', 'All command subfolders are empty! Cannot proceed without any command modules installed. Exiting...');
     return process.exit(-1);
 }
@@ -38,9 +44,10 @@ if(executer.size <= 0) {
 module.exports = {
     task: 'message',
     run: async message => {
+        for(let i = 0; i < command.length; i++) message.client.commands.set(command[i].name, command[i]);
         var args = message.content.split(/ +/);
         var coms = args.shift().slice(prefix.length);
-        var execute = executer.get(coms) || executer.find(a => a.alias && a.alias.includes(coms));
+        var execute = message.client.commands.get(coms) || message.client.commands.find(a => a.alias && a.alias.includes(coms));
         try {
             execute.run(message, args)
         } catch(e) {

@@ -20,6 +20,7 @@ sideloads.forEach(i => {
 
 //Create bot
 const bot = new Discord.Client();
+bot.commands = new Discord.Collection();
 
 bot.login(token);
 
