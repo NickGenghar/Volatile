@@ -5,6 +5,8 @@
  * @param {any} [second] Second receiving object.
  */
 module.exports = (bot, code, first, second) => {
-    try {bot.sideload.get(code).run(first, second);}
+    let execute = bot.sideload.get(code);
+    if(typeof execute === 'undefined') return;
+    try {execute.run(first, second);}
     catch(e) {if(e) throw e;}
 }

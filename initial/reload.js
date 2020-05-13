@@ -20,11 +20,7 @@ module.exports = (bot) => {
                 let index = 0;
                 commandFiles.forEach(files => {
                     try {
-                        try {
-                            delete require.cache[require.resolve(`./commands/${subFolder}/${files}`)];
-                        } catch(e) {
-                            if(e) console.log('\x1b[33m%s\x1b[0m', `Module [${files}] first initialization.`);
-                        }
+                        delete require.cache[require.resolve(`../commands/${subFolder}/${files}`)];
                         let pull = require(`../commands/${subFolder}/${files}`);
                         command[index] = {
                             name: pull.name,
